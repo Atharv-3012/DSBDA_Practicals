@@ -1,0 +1,63 @@
+Data Analytics III
+
+1. Implement Simple Naïve Bayes classification algorithm using Python/R on iris.csv dataset.  
+2. Compute Confusion matrix to find TP, FP, TN, FN, Accuracy, Error rate, Precision, Recall on the given dataset.
+
+import pandas as pd
+from sklearn.model_selection import train_test_split
+from sklearn.metrics import confusion_matrix, accuracy_score, precision_score, recall_score
+from sklearn.naive_bayes import GaussianNB
+import matplotlib.pyplot as plt
+import seaborn as sns
+  
+df = pd.read_csv(r"C:\Users\DELL\Downloads\DSBDA_Practicals\DSBDA_Practicals\DSBDAL-6\Iris.csv")
+df
+
+df.columns
+#df.head()
+#df.describe()
+#df.head()
+#df.info()
+
+X = df[['Id', 'SepalLengthCm', 'SepalWidthCm', 'PetalLengthCm', 'PetalWidthCm']]
+Y = df[['Species']]
+
+X_train, X_test, Y_train, Y_test = train_test_split(X,Y,test_size=0.25,random_state=93)
+
+len(X_train)
+
+len(X_test)
+
+model = GaussianNB()
+model.fit(X_train,Y_train)
+
+Y_pred = model.predict(X_test)
+
+Y_pred
+
+model.score(X_train,Y_train)
+
+model.score(X,Y)
+
+a = accuracy_score(Y_test, Y_pred)
+a
+
+e = 1-a
+e
+
+precision_score(Y_test,Y_pred,average='micro')
+
+recall_score(Y_test, Y_pred, average='micro')
+
+cm = confusion_matrix(Y_test, Y_pred)
+cm
+
+model.predict_proba(X_test)
+
+#Plotting the confusion matrix
+plt.figure(figsize=(5,4))
+sns.heatmap(cm)
+plt.title('Confusion Matrix')
+plt.ylabel('Actual Values')
+plt.xlabel('Predicted Values')
+plt.show()

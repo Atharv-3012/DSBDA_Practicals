@@ -1,0 +1,53 @@
+Data Visualization III 
+
+Download the Iris flower dataset or any other dataset into a DataFrame. (e.g., https://archive.ics.uci.edu/ml/datasets/Iris ). Scan the dataset and give the inference as: 
+
+1. List down the features and their types (e.g., numeric, nominal) available in the dataset. 
+
+2. Create a histogram for each feature in the dataset to illustrate the feature distributions. 
+
+3. Create a boxplot for each feature in the dataset. 
+
+4. Compare distributions and identify outliers.
+
+import pandas as pd
+import matplotlib.pyplot as plt
+
+df=pd.read_csv(r"C:\Users\DELL\Desktop\dsbdal\Iris.csv")
+
+df.head()
+
+# List down the features and their types
+features = ['SepalLengthCm', 'SepalWidthCm', 'PetalLengthCm', 'PetalWidthCm']
+feature_types = ['numeric', 'numeric', 'numeric', 'numeric']
+
+# Print the features and their types
+for feature, ftype in zip(features, feature_types):
+    print(f"Feature: {feature} - Type: {ftype}")
+
+# Create histograms for each feature
+#df[features].hist()
+df[features].hist()
+plt.suptitle('Histograms of Iris Dataset Features')
+plt.show()
+
+# Create box plots for each feature
+df[features].boxplot()
+plt.suptitle('Box Plots of Iris Dataset Features')
+plt.show()
+
+# Identify outliers
+outliers = []
+for feature in features:
+    q1 = df[feature].quantile(0.25)
+    q3 = df[feature].quantile(0.75)
+    iqr = q3 - q1
+    lower_bound = q1 - (1.5 * iqr)
+    upper_bound = q3 + (1.5 * iqr)
+    feature_outliers = df[(df[feature] < lower_bound) | (df[feature] > upper_bound)]
+    outliers.append(feature_outliers)
+
+# Print the outliers for each feature
+for feature, outlier_df in zip(features, outliers):
+    print(f"\nOutliers for feature: {feature}")
+    print(outlier_df)

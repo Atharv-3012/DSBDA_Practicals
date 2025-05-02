@@ -1,0 +1,63 @@
+Data Visualization I 
+1. Use the inbuilt dataset 'titanic'. The dataset contains 891 rows and contains information about the passengers who boarded the unfortunate Titanic ship. Use the Seaborn library to see if we can find any patterns in the data.
+
+ 2. Write a code to check how the price of the ticket (column name: 'fare') for each passenger is distributed by plotting a histogram.
+Data Visualization II 
+
+1. Use the inbuilt dataset 'titanic' as used in the above problem. Plot a box plot for distribution of age with respect to each gender along with the information about whether they survived or not. (Column names : 'sex' and 'age') 
+
+2. Write observations on the inference from the above statistics
+
+import seaborn as sns
+import pandas as pd
+import matplotlib.pyplot as plt
+
+df=pd.read_csv(r"C:\Users\DELL\Desktop\dsbdal\Titanic-Dataset.csv")
+df
+
+df.info()
+
+df.describe()
+
+df.count()
+
+df.isnull().sum()
+
+df1=df.dropna()
+
+df1
+
+df1.isnull().sum()
+
+df1.columns
+
+df2=df1.drop(['Name', 'SibSp','Ticket','Pclass','PassengerId','Parch','Cabin','Embarked'], axis=1)
+
+df2
+
+sns.countplot(x ='Sex', data = df2)
+# Show the plot
+plt.show()
+
+sns.countplot(x ='Survived', data = df2)
+# Show the plot
+plt.show()
+
+sns.displot(df2['Fare'],kde = False)
+plt.show()
+
+df2[['Fare','Survived']]
+
+df2.boxplot()
+
+sns.histplot(df2['Fare'],kde = False)
+plt.show()
+
+#sns.set_style("whitegrid")
+sns.boxplot(x = 'Sex', y = 'Age', data = df2)
+
+# create another grouped boxplot 
+sns.boxplot(x = df2['Sex'],
+            y = df2['Age'],
+            hue = df2['Survived'])
+           # palette = 'Set2'

@@ -1,0 +1,65 @@
+Data Wrangling II 
+
+Create an “Academic performance” dataset of students and perform the following operations using Python.
+
+ 1. Scan all variables for missing values and inconsistencies. If there are missing values and/or inconsistencies, use any of the suitable techniques to deal with them.
+ 
+2. Scan all numeric variables for outliers. If there are outliers, use any of the suitable techniques to deal with them. 
+  
+3. Apply data transformations on at least one of the variables. The purpose of this transformation should be one of the following reasons: to change the scale for better understanding of the variable, to convert a non-linear relation into a linear one, or to decrease the skewness and convert the distribution into a normal distribution. Reason and document your approach properly.
+
+import numpy as np
+import pandas as pd
+import matplotlib.pyplot as plt
+data={
+    'Student_ID':[1,2,3,4,5],
+    'Age':[16,17,18,21,np.nan],
+    'gender':['Male','Female',np.nan,'Male','Male'],
+    'study_hours':[1,2,5,100,np.nan],
+    'attendacne':[75,np.nan,110,45,70],
+    'math_score':[-10,40,50,10,30],
+    'Gpa':[3.2,4.5,2.1,4.0,3.1]
+}
+df=pd.DataFrame(data)
+df.head()
+
+# Missing values
+df.isnull().sum()
+
+df['Age']=df['Age'].fillna(df['Age'].median())
+df['study_hours']=df['study_hours'].fillna(df['study_hours'].median())
+df['attendacne']=df['attendacne'].fillna(df['attendacne'].median())
+df['gender']=df['gender'].fillna(df['gender'].mode()[0])
+df.head()
+
+# Handling Inconsistency
+df['Age']=df['Age'].where(df['Age'].between(16,18),df['Age'].median())
+df['attendacne']=df['attendacne'].where(df['attendacne'].between(0,100),df['attendacne'].median())
+df['math_score']=df['math_score'].where(df['math_score'].between(0,40),df['math_score'].median())
+df['Gpa']=df['Gpa'].where(df['Gpa'].between(0,4),df['Gpa'].median())
+df.head()
+
+#outliers
+def cap_outliers(series):
+    q1=series.quantile(0.25)
+    q3=series.quantile(0.75)
+    IQR=q3-q1
+    lower_bound=q1-(1.5*q1)
+    upper_bound=q3+(1.5*q3)
+    return series.clip(lower_bound,upper_bound)
+df['study_hours']=cap_outliers(df['study_hours'])
+df.head()
+
+# Transofrimg data                          why?.... To reduce right-skewness and normalize the distribution for models that assume normality
+from scipy.stats import skew
+print("Skewness before transformation:", skew(df['study_hours']))
+# Apply log1p transformation
+df['Log_Study_Hours'] = np.log1p(df['study_hours'])
+print("Skewness after transformation:", skew(df['Log_Study_Hours']))
+df.head()
+
+print(df.dtypes)
+print(df.columns)
+
+df.boxplot()
+plt.show()

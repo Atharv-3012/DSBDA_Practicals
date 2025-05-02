@@ -16,6 +16,11 @@ Perform the following operations using Python on any open source dataset (e.g., 
 import numpy as np
 import pandas as pd
 df=pd.read_csv(r"C:\Users\DELL\Desktop\dsbdal\train.csv")
+OR in Colab
+from google.colab import files
+uploaded = files.upload()
+import pandas as pd
+df = pd.read_csv("Iris.csv")
 
 #First four rows
 df.head()
